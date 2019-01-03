@@ -1,4 +1,7 @@
+# ignore
 
+node_modules/
 *.swp
 *.js~
 *.html~
+.gitignore~
