@@ -1,4 +1,5 @@
 // index.js
+// from https://www.tutorialspoint.com/nodejs/nodejs_express_framework.htm
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
@@ -72,7 +73,8 @@ app.post('/process_query', urlencodedParser, function (req, res) {
     serp.json(p, (data) => {
       //expect(data.local_results[0].title.length).toBeGreaterThan(5)
       //done()
-      res.end(JSON.stringify(data));
+      //res.end(JSON.stringify(data));
+      res.send(data);
       let json = data.local_results;
       //res.sendFile( __dirname + "/" + "search3.html" ); // search = post
     })
