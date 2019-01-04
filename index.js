@@ -3,11 +3,16 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var path = require('path');
 
 var gsr = require('./GoogleSearchResults');
 
 // Create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+// pug stuff
+app.set('view engine', 'pug')
+app.set('views', path.join(__dirname, 'views'))
 
 // static pages
 app.use(express.static('public'));
@@ -30,7 +35,8 @@ app.get('/', function (req, res) {
 
   //res.sendFile( __dirname + "/" + "search.html" ); // search = get
   //res.sendFile( __dirname + "/" + "search2.html" ); // search = post
-  res.sendFile( __dirname + "/" + "search3.html" ); // search = post
+  //res.sendFile( __dirname + "/" + "search3.html" ); // search = post
+  res.render('search')
 })
 
 app.get('/process_get', function (req, res) {
@@ -74,8 +80,12 @@ app.post('/process_query', urlencodedParser, function (req, res) {
       //expect(data.local_results[0].title.length).toBeGreaterThan(5)
       //done()
       //res.end(JSON.stringify(data));
-      res.send(data);
-      let json = data.local_results;
+      //res.send(data);
+      //res.json(data);
+      let json_string = JSON.stringify(data);
+      let results = data.local_results;
+      console.log(data)
+      res.render('search', {data:data, json: json_string})
       //res.sendFile( __dirname + "/" + "search3.html" ); // search = post
     })
    

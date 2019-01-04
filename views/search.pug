@@ -1,0 +1,48 @@
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='description', content='Some description')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+
+    block head
+  body
+    block body
+      h2 Search - SERP URL GET via POST
+
+      //- how to do forms?
+      form(action = "/process_query" method = "POST")
+        input(type = "text" name = "query") 
+        input(type = "submit" value = "Search")
+
+      h2 Raw JSON response
+      //- input(type = "textbox" rows="5" cols="25" name = "json" value={data})
+      //- input(type = "textarea" rows="5" cols="25" name = "json" value={data})
+      textarea(rows="10" cols="75") #{json}
+      //- textarea(rows="5" cols="25" value={json})
+      h3 Search Parameters
+      if data
+        p Query: #{data.search_parameters.q}
+        p Total Results: #{data.search_information.total_results}
+
+      h2 Related Searches
+      if data
+        for related in data.related_searches
+          //- li #{related.query} #{related.link}
+          //- li a(href="/search?"+#{related.query}) #{related.query}
+          a(href="/search?"+related.query) #{related.query}
+          br
+
+      h2 Related Questions
+      if data
+        for relq in data.related_questions
+          div
+            a(href=relq.link target="_blank") #{relq.question}
+            p #{relq.snippet}
+
+      h2 Results
+      if data
+        for result in data.organic_results
+          a(href=result.link target="_blank") #{result.title}
+          p #{result.snippet}
+
