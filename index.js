@@ -73,8 +73,10 @@ app.post('/process_query', urlencodedParser, function (req, res) {
    };
    console.log(response);
     //let p = {q: "Coffee", location: "Austin, Texas"}
-    let p = {q: response.query, location: null}
+    //let p = {q: response.query, location: null} // num not allowed
+    let p = {q: response.query, location: null, hl: "en", gl: "us", num: 100} // coffee
     let serp = new gsr.GoogleSearchResults("demo")
+    //let serp = new gsr.GoogleSearchResults("test") // bad key
 
     serp.json(p, (data) => {
       //expect(data.local_results[0].title.length).toBeGreaterThan(5)
@@ -83,13 +85,46 @@ app.post('/process_query', urlencodedParser, function (req, res) {
       //res.send(data);
       //res.json(data);
       let json_string = JSON.stringify(data);
+      let related = data.related_searches;
+      related.forEach((rel, index) => {
+	    console.log(rel.query)
+	    console.log(rel.link)
+	      var new_link = rel.query.replace(/\s/g, '+');
+            console.log(new_link);
+	    rel.link = "/get_query/"+new_link;
+      })
       let results = data.local_results;
-      console.log(data)
-      res.render('search', {data:data, json: json_string})
+      //console.log(data)
+      res.render('search', {data:data, json:json_string, related_searches2:related})
       //res.sendFile( __dirname + "/" + "search3.html" ); // search = post
     })
    
    //res.end(JSON.stringify(response));
+})
+
+app.get('/get_query/:q', function (req, res) {
+   response = {
+      query:req.params.q,
+   };
+   console.log(response);
+    //let p = {q: response.query, location: null, hl: "en", gl: "us", num: 100} // coffee
+    let p = {q: response.query, location: null, hl: "en", gl: "us"} // any
+    let serp = new gsr.GoogleSearchResults("demo")
+
+    serp.json(p, (data) => {
+      let json_string = JSON.stringify(data);
+      let related = data.related_searches;
+      related.forEach((rel, index) => {
+	    console.log(rel.query)
+	    console.log(rel.link)
+	      var new_link = rel.query.replace(/\s/g, '+');
+            console.log(new_link);
+	    rel.link = "/search?q="+new_link;
+      })
+      let results = data.local_results;
+      //console.log(data)
+      res.render('search', {data:data, json:json_string, related_searches2:related})
+    })
 })
 
 var server = app.listen(8081, function () {
