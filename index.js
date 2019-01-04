@@ -1,8 +1,9 @@
 // index.js
 var express = require('express');
 var app = express();
-
 var bodyParser = require('body-parser');
+
+var gsr = require('./GoogleSearchResults');
 
 // Create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
@@ -25,7 +26,10 @@ app.get('/', function (req, res) {
 ***/
 
 app.get('/', function (req, res) {
-   res.sendFile( __dirname + "/" + "search2.html" ); // search = get 2 = post
+
+  //res.sendFile( __dirname + "/" + "search.html" ); // search = get
+  //res.sendFile( __dirname + "/" + "search2.html" ); // search = post
+  res.sendFile( __dirname + "/" + "search3.html" ); // search = post
 })
 
 app.get('/process_get', function (req, res) {
@@ -47,13 +51,34 @@ app.post('/', function (req, res) {
 app.post('/process_post', urlencodedParser, function (req, res) {
    // Prepare output in JSON format
    response = {
-      first_name:req.body.first_name,
-      last_name:req.body.last_name
+      query:req.body.query,
+      //last_name:req.body.last_name
    };
    console.log(response);
    res.end(JSON.stringify(response));
 })
 
+app.post('/process_query', urlencodedParser, function (req, res) {
+   // Prepare output in JSON format
+   response = {
+      query:req.body.query,
+      //last_name:req.body.last_name
+   };
+   console.log(response);
+    //let p = {q: "Coffee", location: "Austin, Texas"}
+    let p = {q: response.query, location: null}
+    let serp = new gsr.GoogleSearchResults("demo")
+
+    serp.json(p, (data) => {
+      //expect(data.local_results[0].title.length).toBeGreaterThan(5)
+      //done()
+      res.end(JSON.stringify(data));
+      let json = data.local_results;
+      //res.sendFile( __dirname + "/" + "search3.html" ); // search = post
+    })
+   
+   //res.end(JSON.stringify(response));
+})
 
 var server = app.listen(8081, function () {
    var host = server.address().address
