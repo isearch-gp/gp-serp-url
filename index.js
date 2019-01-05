@@ -108,9 +108,10 @@ app.get('/get_query/:q', function (req, res) {
    };
    console.log(response);
     //let p = {q: response.query, location: null, hl: "en", gl: "us", num: 100} // coffee
-    let p = {q: response.query, location: null, hl: "en", gl: "us"} // any
+    let p = {q: response.query, location: null} // any
     let serp = new gsr.GoogleSearchResults("demo")
 
+    try {
     serp.json(p, (data) => {
       let json_string = JSON.stringify(data);
       let related = data.related_searches;
@@ -124,7 +125,14 @@ app.get('/get_query/:q', function (req, res) {
       let results = data.local_results;
       //console.log(data)
       res.render('search', {data:data, json:json_string, related_searches2:related})
+//    }, (err) => {
+//	    console.log("ERROR "+err);
     })
+
+    } catch (ex) {
+	    console.log(ex.message);
+	    res.send(ex.message);
+    }
 })
 
 var server = app.listen(8081, function () {
