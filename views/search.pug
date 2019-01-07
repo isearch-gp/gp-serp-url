@@ -12,14 +12,19 @@ html
 
       //- how to do forms?
       form(action = "/process_query" method = "POST")
-        if data.search_parameters
-          input(type = "text" size="60" name = "query" value = data.search_parameters.q ) 
-        else
+        if data
+          if data.search_parameters
+            input(type = "text" size="60" name = "query" value = data.search_parameters.q )
+          else
+            input(type = "text" size="60" name = "query" value = "" )
+
+        if !data
           input(type = "text" size="60" name = "query" value = "" ) 
         input(type = "submit" value = "Search")
 
-      if data.error
-        h2(style="color: red") #{data.error}
+      if data
+        if data.error
+          h2(style="color: red") #{data.error}
 
       if json
         h2 Raw JSON response
@@ -28,9 +33,10 @@ html
       //- input(type = "textarea" rows="5" cols="25" name = "json" value={data})
       //- textarea(rows="5" cols="25" value={json})
       //- h3 Search Parameters
-      if data.search_information
-        //- p Query: <strong> #{data.search_parameters.q} </strong>
-        p Total Results: <b> #{data.search_information.total_results} </b>
+      if data
+        if data.search_information
+          //- p Query: <strong> #{data.search_parameters.q} </strong>
+          p Total Results: <b> #{data.search_information.total_results} </b>
 
       if related_searches2
         h2 Related Searches #{related_searches2.length}
