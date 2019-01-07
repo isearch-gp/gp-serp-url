@@ -41,22 +41,32 @@ html
           br
 
 
-      if data.related_questions
-        h2 Related Questions #{data.related_questions.length}
+      if data
+        if data.related_questions
+          h2 Related Questions #{data.related_questions.length}
+        else
+          h2 Related Questions
       else
-        h2 Related Questions
-      if data.related_questions
-        for relq in data.related_questions
-          div
-            a(href=relq.link target="_blank") #{relq.question}
-            p #{relq.snippet}
+          h2 Related Questions
 
-      if data.organic_results
-        h2 Results #{data.organic_results.length}
+      if data  
+        if data.related_questions
+          for relq in data.related_questions
+            div
+              a(href=relq.link target="_blank") #{relq.question}
+              p #{relq.snippet}
+
+      if data
+        if data.organic_results
+          h2 Results #{data.organic_results.length}
+        else
+          h2 Results
       else
-        h2 Results
-      if data.organic_results
-        for result in data.organic_results
-          a(href=result.link target="_blank") #{result.title}
-          p #{result.snippet}
+          h2 Results
+
+      if data
+        if data.organic_results
+          for result in data.organic_results
+            a(href=result.link target="_blank") #{result.title}
+            p #{result.snippet}
 

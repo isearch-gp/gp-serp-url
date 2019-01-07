@@ -74,7 +74,8 @@ app.post('/process_query', urlencodedParser, function (req, res) {
    console.log(response);
     //let p = {q: "Coffee", location: "Austin, Texas"}
     //let p = {q: response.query, location: null} // num not allowed
-    let p = {q: response.query, location: null, hl: "en", gl: "us", num: 100} // coffee
+    //let p = {q: response.query, location: null, hl: "en", gl: "us", num: 100} // coffee
+    let p = {q: response.query, location: null, hl: "en", gl: "us"} // any
     let serp = new gsr.GoogleSearchResults("demo")
     //let serp = new gsr.GoogleSearchResults("test") // bad key
 
@@ -120,7 +121,7 @@ app.get('/get_query/:q', function (req, res) {
 	    console.log(rel.link)
 	      var new_link = rel.query.replace(/\s/g, '+');
             console.log(new_link);
-	    rel.link = "/search?q="+new_link;
+	    rel.link = "/get_query/"+new_link;
       })
       let results = data.local_results;
       //console.log(data)
