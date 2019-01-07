@@ -1,0 +1,41 @@
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='description', content='Some description')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+
+    block head
+  body
+    block body
+      h2 Search - Python Google Search Web Scraper GET via POST
+
+      //- how to do forms?
+      form(action = "/process_googler" method = "POST")
+        if data.search_parameters
+          input(type = "text" size="60" name = "query" value = data.search_parameters.q ) 
+        else
+          input(type = "text" size="60" name = "query" value = "" ) 
+        input(type = "submit" value = "Search")
+
+      if json
+        h2 Raw JSON response
+        textarea(rows="10" cols="75") #{json}
+
+      if data.search_information
+        p Total Results: <b> #{data.search_information.total_results} </b>
+
+      if data
+        if data.organic_results
+          h2 Results #{data.organic_results.length}
+        else
+          h2 Results
+      else
+          h2 Results
+
+      if data
+        if data.organic_results
+          for result in data.organic_results
+            a(href=result.link target="_blank") #{result.title}
+            p #{result.snippet}
+

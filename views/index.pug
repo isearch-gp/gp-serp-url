@@ -1,0 +1,53 @@
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='description', content='Some description')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+
+    block head
+  body
+    block body
+      h2 Search Options
+
+      a(href="https://cse.google.com/cse/publicurl?cx=008147714689940177887:kh4cfnyzmeg" target="_" style="font-size:20;") Google Custom Search Web/API
+      li Contains ads from Google
+      li Limited to 10K searches a day
+      li 10K searchs costs $50 a day
+      li <b>No</b> related searches or related questions returned
+      li Google pulls the location (of the search request) from local browser
+      li Limited to one page of results at a time
+      br
+
+      a(href="/search" target="_" style="font-size:20;") SERP API
+      li API only (I built the web proxy)
+      li No ads
+      li No daily search limit
+      li Monthly pricing $50 for 5K, $130 for 15K, $250 for 30K
+      li provides both <b>related searches</b> and <b>related questions</b>
+      li We control the location (of the search request)
+      li API can support large number of responses (1,000+)
+      br
+
+      a(href="/search-git" target="_" style="font-size:20;") NodeJS Google Search Web Scraper
+      li open source
+      li API only (I built the web proxy)
+      li No ads
+      li No daily search limit - but can hit CAPTCHA and fail
+      li free
+      li <b>No</b> related searches or related questions returned
+      li We control the location (of the search request)?
+      li Limited to one page of results at a time      
+      br
+
+      a(href="/googler" target="_" style="font-size:20;") Python Google Search Web Scraper
+      li open source
+      li Command Line only (I'm building the web proxy)
+      li No ads
+      li No daily search limit - but can CAPTCHA and fail
+      li free
+      li <b>No</b> related searches or related questions returned
+      li We control the location (of the search request)?
+      li Command line can support large number of responses (1,000+)
+      br
+

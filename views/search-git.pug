@@ -8,11 +8,11 @@ html
     block head
   body
     block body
-      h2 Search - SERP API GET via POST
+      h2 Search - NodeJS Google Search Web Scraper GET via POST
 
       //- how to do forms?
-      form(action = "/process_query" method = "POST")
-        if data
+      form(action = "/process_git" method = "POST")
+        if data.search_parameters
           input(type = "text" size="60" name = "query" value = data.search_parameters.q ) 
         else
           input(type = "text" size="60" name = "query" value = "" ) 
@@ -25,36 +25,9 @@ html
       //- input(type = "textarea" rows="5" cols="25" name = "json" value={data})
       //- textarea(rows="5" cols="25" value={json})
       //- h3 Search Parameters
-      if data
+      if data.search_information
         //- p Query: <strong> #{data.search_parameters.q} </strong>
         p Total Results: <b> #{data.search_information.total_results} </b>
-
-      if related_searches2
-        h2 Related Searches #{related_searches2.length}
-      else
-        h2 Related Searches
-      if related_searches2
-        for related in related_searches2
-          //- li #{related.query} #{related.link}
-          //- li a(href="/search?"+#{related.query}) #{related.query}
-          a(href=related.link) #{related.query}
-          br
-
-
-      if data
-        if data.related_questions
-          h2 Related Questions #{data.related_questions.length}
-        else
-          h2 Related Questions
-      else
-          h2 Related Questions
-
-      if data  
-        if data.related_questions
-          for relq in data.related_questions
-            div
-              a(href=relq.link target="_blank") #{relq.question}
-              p #{relq.snippet}
 
       if data
         if data.organic_results

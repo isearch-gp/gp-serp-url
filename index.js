@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var path = require('path');
 
 var gsr = require('./GoogleSearchResults');
+var googleIt = require('./GoogleIt');
 
 // Create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
@@ -36,7 +37,19 @@ app.get('/', function (req, res) {
   //res.sendFile( __dirname + "/" + "search.html" ); // search = get
   //res.sendFile( __dirname + "/" + "search2.html" ); // search = post
   //res.sendFile( __dirname + "/" + "search3.html" ); // search = post
+  res.render('index')
+})
+
+app.get('/search', function (req, res) {
   res.render('search')
+})
+
+app.get('/search-git', function (req, res) {
+  res.render('search-git')
+})
+
+app.get('/googler', function (req, res) {
+  res.render('googler')
 })
 
 app.get('/process_get', function (req, res) {
@@ -89,10 +102,10 @@ app.post('/process_query', urlencodedParser, function (req, res) {
       let json_string = JSON.stringify(data);
       let related = data.related_searches;
       related.forEach((rel, index) => {
-	    console.log(rel.query)
-	    console.log(rel.link)
+	    //console.log(rel.query)
+	    //console.log(rel.link)
 	      var new_link = rel.query.replace(/\s/g, '+');
-            console.log(new_link);
+            //console.log(new_link);
 	    rel.link = "/get_query/"+new_link;
       })
       let results = data.local_results;
@@ -122,10 +135,10 @@ app.get('/get_query/:q', function (req, res) {
       let json_string = JSON.stringify(data);
       let related = data.related_searches;
       related.forEach((rel, index) => {
-	    console.log(rel.query)
-	    console.log(rel.link)
+	    //console.log(rel.query)
+	    //console.log(rel.link)
 	      var new_link = rel.query.replace(/\s/g, '+');
-            console.log(new_link);
+            //console.log(new_link);
 	    rel.link = "/get_query/"+new_link;
       })
       let results = data.local_results;
@@ -139,6 +152,64 @@ app.get('/get_query/:q', function (req, res) {
 	    console.log(ex.message);
 	    res.send(ex.message);
     }
+})
+
+app.post('/process_git', urlencodedParser, function (req, res) {
+   // Prepare output in JSON format
+   response = {
+      query:req.body.query,
+      //last_name:req.body.last_name
+   };
+   console.log(response);
+   // let p = {q: response.query, location: null, hl: "en", gl: "us"} // any
+
+   // with request options
+   const options = {
+     'disableConsole ': true
+   };
+   
+   googleIt(options, {'query': response.query }).then(results => {
+   // access to results object here
+       let json_string = JSON.stringify(results);
+       console.log(results);
+
+       res.render('search-git', {data:results, json:json_string})
+      //res.sendFile( __dirname + "/" + "search3.html" ); // search = post
+
+   }).catch(e => {
+   // any possible errors that might have occurred (like no Internet connection)
+     	console.log(e.message);
+	res.send(e.message);
+   })
+})
+
+app.post('/process_googler', urlencodedParser, function (req, res) {
+   // Prepare output in JSON format
+   response = {
+      query:req.body.query,
+      //last_name:req.body.last_name
+   };
+   console.log(response);
+   // let p = {q: response.query, location: null, hl: "en", gl: "us"} // any
+
+   // with request options
+   const options = {
+     'disableConsole ': true
+   };
+   
+   googleIt(options, {'query': response.query }).then(results => {
+   // access to results object here
+       let json_string = JSON.stringify(results);
+       console.log(results);
+
+       res.render('googler', {data:results, json:json_string})
+      //res.sendFile( __dirname + "/" + "search3.html" ); // search = post
+
+   }).catch(e => {
+   // any possible errors that might have occurred (like no Internet connection)
+     	console.log(e.message);
+	res.send(e.message);
+   })
 })
 
 var server = app.listen(8081, function () {
