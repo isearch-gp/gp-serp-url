@@ -8,3 +8,5 @@ node_modules/
 *.pug~
 *.json~
 *.json~
+*.json~
+package.json~
