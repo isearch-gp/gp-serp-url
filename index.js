@@ -60,19 +60,11 @@ app.get('/search-git', function (req, res) {
   res.render('search-git')
 })
 
-app.get('/googler', function (req, res) {
-  res.render('googler')
-  /***
-     var data = {
-      search_parameters: {
-        q: response.query
-      },
-      error: "Python API not yet available"
-   }
-   res.render('googler', {data:data})
-   ***/
+app.get('/search-googler', function (req, res) {
+  res.render('search-googler')
 })
 
+// Get
 app.get('/process_get', function (req, res) {
    // Prepare output in JSON format
    response = {
@@ -89,6 +81,7 @@ app.post('/', function (req, res) {
    res.send('Hello POST');
 })
 
+// Post
 app.post('/process_post', urlencodedParser, function (req, res) {
    // Prepare output in JSON format
    response = {
@@ -99,6 +92,7 @@ app.post('/process_post', urlencodedParser, function (req, res) {
    res.end(JSON.stringify(response));
 })
 
+// SERP API Post (from search.pug)
 app.post('/process_query', urlencodedParser, function (req, res) {
    // Prepare output in JSON format
    response = {
@@ -150,6 +144,7 @@ app.post('/process_query', urlencodedParser, function (req, res) {
     }
 })
 
+// SERP API Get (from search.pug) for related searches only
 app.get('/get_query/:q', function (req, res) {
    response = {
       query:req.params.q,
@@ -191,6 +186,7 @@ app.get('/get_query/:q', function (req, res) {
     }
 })
 
+// Node JS Web scraper (git) Post from (search_git.pug)
 app.post('/process_git', urlencodedParser, function (req, res) {
    // Prepare output in JSON format
    response = {
@@ -220,6 +216,7 @@ app.post('/process_git', urlencodedParser, function (req, res) {
    })
 })
 
+// Python Web scraper (googler) Post from (search_googler.pug)
 app.post('/process_googler', urlencodedParser, function (req, res) {
    response = {
       query:req.body.query,
@@ -243,7 +240,7 @@ app.post('/process_googler', urlencodedParser, function (req, res) {
      error: "Python API not yet available",
      query: response.query,
    };
-   res.render('googler', {data:data})
+   res.render('search-googler', {data:data})
 })
 
 
