@@ -7,8 +7,8 @@ var path = require('path');
 
 //var serverPort = 8000;
 // use port 3000 unless there exists a preconfigured port
-//var serverPort = process.env.port || 8081;
-var serverPort = app.get('PORT') || 8081;
+var serverPort = process.env.PORT || 8081;
+//var serverPort = app.get('PORT') || 8081;
 
 var gsr = require('./GoogleSearchResults');
 var googleIt = require('./GoogleIt');
