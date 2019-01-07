@@ -5,7 +5,10 @@ var app = express();
 var bodyParser = require('body-parser');
 var path = require('path');
 
-var serverPort = 8000;
+//var serverPort = 8000;
+// use port 3000 unless there exists a preconfigured port
+var serverPort = process.env.port || 8081;
+
 var gsr = require('./GoogleSearchResults');
 var googleIt = require('./GoogleIt');
 
@@ -245,5 +248,7 @@ var server = app.listen(serverPort, function () {
    var port = server.address().port
    
    console.log("Example app listening at http://%s:%s", host, port)
+
+   console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
 })
 
