@@ -1,9 +1,9 @@
 {
   "name": "gp-serp-url",
   "version": "1.0.0",
-  "description": "simple Google Search web proxies",
+  "description": "Interative Search: simple Google Search web proxies",
   "private": true,
-  "license": "ISearch",
+  "license": "Interative Search",
   "main": "index.js",
   "engines": {
     "node": "8.11.3"
