@@ -99,6 +99,14 @@ app.post('/process_query', urlencodedParser, function (req, res) {
       //res.end(JSON.stringify(data));
       //res.send(data);
       //res.json(data);
+      //
+      // add error checking
+      if (data.error) {
+	console.log(data.error);
+	//res.end(data.error);
+	res.render('search', {data:data})
+	return
+      }
       let json_string = JSON.stringify(data);
       let related = data.related_searches;
       related.forEach((rel, index) => {
@@ -117,7 +125,7 @@ app.post('/process_query', urlencodedParser, function (req, res) {
    //res.end(JSON.stringify(response));
     } catch (ex) {
 	console.log(ex.message);
-	res.send(ex.message);
+	res.end(ex.message);
     }
 })
 
@@ -132,6 +140,13 @@ app.get('/get_query/:q', function (req, res) {
 
     try {
     serp.json(p, (data) => {
+      // add error checking
+      if (data.error) {
+	console.log(data.error);
+	//res.end(data.error);
+	res.render('search', {data:data})	
+	return
+      }
       let json_string = JSON.stringify(data);
       let related = data.related_searches;
       related.forEach((rel, index) => {
@@ -144,8 +159,9 @@ app.get('/get_query/:q', function (req, res) {
       let results = data.local_results;
       //console.log(data)
       res.render('search', {data:data, json:json_string, related_searches2:related})
-//    }, (err) => {
-//	    console.log("ERROR "+err);
+    }, (err) => {
+	    console.log("ERROR "+err.message);
+	    res.send(err.message);
     })
 
     } catch (ex) {

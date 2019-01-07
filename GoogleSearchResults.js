@@ -66,7 +66,10 @@ class GoogleSearchResults {
           callback(data)
           return
         }
-        throw new Error(JSON.parse(data).error)
+        //throw new Error(JSON.parse(data).error)
+	//console.log(JSON.parse(data).error)
+	callback(data)
+	return
       });
      
     }).on("error", (err) => {
