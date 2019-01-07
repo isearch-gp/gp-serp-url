@@ -79,6 +79,7 @@ app.post('/process_query', urlencodedParser, function (req, res) {
     let serp = new gsr.GoogleSearchResults("demo")
     //let serp = new gsr.GoogleSearchResults("test") // bad key
 
+    try {
     serp.json(p, (data) => {
       //expect(data.local_results[0].title.length).toBeGreaterThan(5)
       //done()
@@ -101,6 +102,10 @@ app.post('/process_query', urlencodedParser, function (req, res) {
     })
    
    //res.end(JSON.stringify(response));
+    } catch (ex) {
+	console.log(ex.message);
+	res.send(ex.message);
+    }
 })
 
 app.get('/get_query/:q', function (req, res) {
