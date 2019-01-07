@@ -50,6 +50,15 @@ app.get('/search-git', function (req, res) {
 
 app.get('/googler', function (req, res) {
   res.render('googler')
+  /***
+     var data = {
+      search_parameters: {
+        q: response.query
+      },
+      error: "Python API not yet available"
+   }
+   res.render('googler', {data:data})
+   ***/
 })
 
 app.get('/process_get', function (req, res) {
@@ -200,35 +209,33 @@ app.post('/process_git', urlencodedParser, function (req, res) {
 })
 
 app.post('/process_googler', urlencodedParser, function (req, res) {
-   // Prepare output in JSON format
    response = {
       query:req.body.query,
-      //last_name:req.body.last_name
    };
    console.log(response);
    // let p = {q: response.query, location: null, hl: "en", gl: "us"} // any
-
-   // with request options
-   const options = {
-     'disableConsole ': true
-   };
-   
+/***
    googleIt(options, {'query': response.query }).then(results => {
    // access to results object here
        let json_string = JSON.stringify(results);
        console.log(results);
-
        res.render('googler', {data:results, json:json_string})
-      //res.sendFile( __dirname + "/" + "search3.html" ); // search = post
 
    }).catch(e => {
    // any possible errors that might have occurred (like no Internet connection)
      	console.log(e.message);
 	res.send(e.message);
    })
+***/
+   data = {
+     error: "Python API not yet available",
+     query: response.query,
+   };
+   res.render('googler', {data:data})
 })
 
-var server = app.listen(8081, function () {
+//var server = app.listen(8081, function () {
+var server = app.listen(80, function () {
    var host = server.address().address
    var port = server.address().port
    
