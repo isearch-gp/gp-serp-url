@@ -12,18 +12,25 @@ html
 
       //- how to do forms?
       form(action = "/process_googler" method = "POST")
-        if data.search_parameters
-          input(type = "text" size="60" name = "query" value = data.search_parameters.q ) 
-        else
-          input(type = "text" size="60" name = "query" value = "" ) 
-        input(type = "submit" value = "Search")
+      if data
+        if data.query
+          input(type = "text" size="60" name = "query" value = data.query )
+
+      if !data
+        input(type = "text" size="60" name = "query" value = "" ) 
+      input(type = "submit" value = "Search")
+
+      if data
+        if data.error
+          h2(style="color: red") #{data.error}
 
       if json
         h2 Raw JSON response
         textarea(rows="10" cols="75") #{json}
 
-      if data.search_information
-        p Total Results: <b> #{data.search_information.total_results} </b>
+      if data
+        if data.search_information
+          p Total Results: <b> #{data.search_information.total_results} </b>
 
       if data
         if data.organic_results
