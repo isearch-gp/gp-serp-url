@@ -5,11 +5,16 @@ var app = express();
 var bodyParser = require('body-parser');
 var path = require('path');
 
+var serverPort = 8000;
 var gsr = require('./GoogleSearchResults');
 var googleIt = require('./GoogleIt');
 
 // Create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+app.use(bodyParser.json({
+    limit: '50mb'
+}));
 
 // pug stuff
 app.set('view engine', 'pug')
@@ -235,7 +240,7 @@ app.post('/process_googler', urlencodedParser, function (req, res) {
 })
 
 //var server = app.listen(8081, function () {
-var server = app.listen(8081, function () {
+var server = app.listen(serverPort, function () {
    var host = server.address().address
    var port = server.address().port
    
