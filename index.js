@@ -207,7 +207,12 @@ app.post('/process_git', urlencodedParser, function (req, res) {
        let json_string = JSON.stringify(results);
        console.log(results);
 
-       res.render('search-git', {data:results, json:json_string})
+       data = {
+         query: response.query,
+	 organic_results: results
+       }
+
+       res.render('search-git', {data:data, json:json_string})
       //res.sendFile( __dirname + "/" + "search3.html" ); // search = post
 
    }).catch(e => {

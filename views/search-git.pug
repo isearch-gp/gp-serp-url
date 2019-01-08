@@ -13,14 +13,18 @@ html
       //- how to do forms?
       form(action = "/process_git" method = "POST")
         if data
-          if data.search_parameters
-            input(type = "text" size="60" name = "query" value = data.search_parameters.q ) 
+          if data.query
+            input(type = "text" size="60" name = "query" value = data.query ) 
           else
             input(type = "text" size="60" name = "query" value = "" )
 
         if !data 
           input(type = "text" size="60" name = "query" value = "" ) 
         input(type = "submit" value = "Search")
+
+      if data
+        if data.error
+          h2(style="color: red") #{data.error}
 
       if json
         h2 Raw JSON response
