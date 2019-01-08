@@ -5,9 +5,9 @@ var app = express();
 var bodyParser = require('body-parser');
 var path = require('path');
 
-//var serverPort = 8000;
-// use port 3000 unless there exists a preconfigured port
-var serverPort = process.env.PORT || 8081;
+//var serverPort = 8081;
+// use port 8081 unless there exists a preconfigured port
+var serverPort = process.env.PORT || 8081; // Heroku uses PORT
 //var serverPort = app.get('PORT') || 8081;
 
 var gsr = require('./GoogleSearchResults');
@@ -45,7 +45,6 @@ app.get('/', function (req, res) {
 ***/
 
 app.get('/', function (req, res) {
-
   //res.sendFile( __dirname + "/" + "search.html" ); // search = get
   //res.sendFile( __dirname + "/" + "search2.html" ); // search = post
   //res.sendFile( __dirname + "/" + "search3.html" ); // search = post
@@ -64,6 +63,7 @@ app.get('/search-googler', function (req, res) {
   res.render('search-googler')
 })
 
+/***
 // Get
 app.get('/process_get', function (req, res) {
    // Prepare output in JSON format
@@ -71,7 +71,7 @@ app.get('/process_get', function (req, res) {
       first_name:req.query.first_name,
       last_name:req.query.last_name
    };
-   console.log(response);
+   console.log("process_get = ",response);
    res.end(JSON.stringify(response));
 })
 
@@ -88,9 +88,10 @@ app.post('/process_post', urlencodedParser, function (req, res) {
       query:req.body.query,
       //last_name:req.body.last_name
    };
-   console.log(response);
+   console.log("process_post = ",response);
    res.end(JSON.stringify(response));
 })
+***/
 
 // SERP API Post (from search.pug)
 app.post('/process_query', urlencodedParser, function (req, res) {
@@ -99,7 +100,7 @@ app.post('/process_query', urlencodedParser, function (req, res) {
       query:req.body.query,
       //last_name:req.body.last_name
    };
-   console.log(response);
+   console.log("proces_query =",response);
     //let p = {q: "Coffee", location: "Austin, Texas"}
     //let p = {q: response.query, location: null} // num not allowed
     //let p = {q: response.query, location: null, hl: "en", gl: "us", num: 100} // coffee
@@ -149,7 +150,7 @@ app.get('/get_query/:q', function (req, res) {
    response = {
       query:req.params.q,
    };
-   console.log(response);
+   console.log("get_query = ",response);
     //let p = {q: response.query, location: null, hl: "en", gl: "us", num: 100} // coffee
     let p = {q: response.query, location: null} // any
     let serp = new gsr.GoogleSearchResults("demo")
@@ -193,7 +194,7 @@ app.post('/process_git', urlencodedParser, function (req, res) {
       query:req.body.query,
       //last_name:req.body.last_name
    };
-   console.log(response);
+   console.log("process_git = ",response);
    // let p = {q: response.query, location: null, hl: "en", gl: "us"} // any
 
    // with request options
@@ -217,11 +218,11 @@ app.post('/process_git', urlencodedParser, function (req, res) {
 })
 
 // Python Web scraper (googler) Post from (search_googler.pug)
-app.post('/process_googler', urlencodedParser, function (req, res) {
+app.post('/googler_process', urlencodedParser, function (req, res) {
    response = {
       query:req.body.query,
    };
-   console.log(response);
+   console.log("googler_process = ",response);
    // let p = {q: response.query, location: null, hl: "en", gl: "us"} // any
 /***
    googleIt(options, {'query': response.query }).then(results => {
@@ -236,11 +237,11 @@ app.post('/process_googler', urlencodedParser, function (req, res) {
 	res.send(e.message);
    })
 ***/
-   data = {
+   var fakeData = {
      error: "Python API not yet available",
      query: response.query,
    };
-   res.render('search-googler', {data:data})
+   res.render('search-googler', {data:fakeData})
 })
 
 
