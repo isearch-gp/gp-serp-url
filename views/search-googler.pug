@@ -11,14 +11,16 @@ html
       h2 Search - Python Google Search Web Scraper GET via POST
 
       //- how to do forms?
-      form(action = "/process_googler" method = "POST")
-      if data
-        if data.query
-          input(type = "text" size="60" name = "query" value = data.query )
+      form(action = "/googler_process" method = "POST")
+        if data
+          if data.query
+            input(type = "text" size="60" name = "query" value = data.query )
+          else
+            input(type = "text" size="60" name = "query" value = "" ) 
 
-      if !data
-        input(type = "text" size="60" name = "query" value = "" ) 
-      input(type = "submit" value = "Search")
+        if !data
+          input(type = "text" size="60" name = "query" value = "" ) 
+        input(type = "submit" value = "Search")
 
       if data
         if data.error
