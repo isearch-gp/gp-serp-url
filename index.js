@@ -4,6 +4,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var path = require('path');
+const request = require('request');
 
 //var serverPort = 8081;
 // use port 8081 unless there exists a preconfigured port
@@ -222,32 +223,85 @@ app.post('/process_git', urlencodedParser, function (req, res) {
    })
 })
 
+
 // Python Web scraper (googler) Post from (search_googler.pug)
 app.post('/googler_process', urlencodedParser, function (req, res) {
    response = {
       query:req.body.query,
    };
    console.log("googler_process = ",response);
-   // let p = {q: response.query, location: null, hl: "en", gl: "us"} // any
-/***
-   googleIt(options, {'query': response.query }).then(results => {
-   // access to results object here
-       let json_string = JSON.stringify(results);
-       console.log(results);
-       res.render('googler', {data:results, json:json_string})
 
-   }).catch(e => {
-   // any possible errors that might have occurred (like no Internet connection)
-     	console.log(e.message);
-	res.send(e.message);
-   })
-***/
-   var fakeData = {
-     error: "Python API not yet available",
-     query: response.query,
+   //request('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY', { json: true }, (err, res, body) => {
+   request('http://127.0.0.1:5000/json?q='+response.query, { json: true }, (err, res2, results) => {
+      if (err) {
+         var fakeData = {
+            //error: "Python API not yet available",
+            error: err,
+            query: response.query,
+         };
+         res.render('search-googler', {data:fakeData})
+         return console.log(err); 
+      }
+      //console.log(body.url);
+      //console.log(body.explanation);
+      let json_string = JSON.stringify(results);
+      console.log(results);
+
+      let related = results.related_searches;
+      related.forEach((rel, index) => {
+	 //console.log(rel.query)
+	 //console.log(rel.link)
+	 var new_link = rel.query.replace(/\s/g, '+');
+         //console.log(new_link);
+	 rel.link = "/get_pquery/"+new_link;
+      })
+
+      //res.render('search-googler', {data:results, json:json_string})
+      res.render('search', {data:results, json:json_string, related_searches2:related})
+	       
+      //res.render('search-googler', {})
+   });
+}) // post
+
+
+// Python Web scraper (googler) Post from (search_googler.pug)
+app.get('/get_pquery/:q', function (req, res) {
+   response = {
+      query:req.params.q,
    };
-   res.render('search-googler', {data:fakeData})
-})
+   console.log("get_pquery = ",response);
+
+   //request('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY', { json: true }, (err, res, body) => {
+   request('http://127.0.0.1:5000/json?q='+response.query, { json: true }, (err, res2, results) => {
+      if (err) {
+         var fakeData = {
+            //error: "Python API not yet available",
+            error: err,
+            query: response.query,
+         };
+         res.render('search-googler', {data:fakeData})
+         return console.log(err); 
+      }
+      //console.log(body.url);
+      //console.log(body.explanation);
+      let json_string = JSON.stringify(results);
+      console.log(results);
+
+      let related = results.related_searches;
+      related.forEach((rel, index) => {
+	 //console.log(rel.query)
+	 //console.log(rel.link)
+	 var new_link = rel.query.replace(/\s/g, '+');
+         //console.log(new_link);
+	 rel.link = "/get_pquery/"+new_link;
+      })
+
+      //res.render('search-googler', {data:results, json:json_string})
+      res.render('search', {data:results, json:json_string, related_searches2:related})
+	       
+      //res.render('search-googler', {})
+   });
+}) // get
 
 
 // catch 404 and forward to error handler

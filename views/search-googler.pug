@@ -32,7 +32,34 @@ html
 
       if data
         if data.search_information
-          p Total Results: <b> #{data.search_information.total_results} </b>
+          p <b> #{data.search_information.total_results} </b>
+
+      if related_searches2
+        h2 Related Searches #{related_searches2.length}
+      else
+        h2 Related Searches
+      if related_searches2
+        for related in related_searches2
+          //- li #{related.query} #{related.link}
+          //- li a(href="/search?"+#{related.query}) #{related.query}
+          a(href=related.link) #{related.query}
+          br
+
+
+      if data
+        if data.related_questions
+          h2 Related Questions #{data.related_questions.length}
+        else
+          h2 Related Questions
+      else
+          h2 Related Questions
+
+      if data  
+        if data.related_questions
+          for relq in data.related_questions
+            div
+              a(href=relq.link target="_blank") #{relq.question}
+              p #{relq.snippet}
 
       if data
         if data.organic_results
