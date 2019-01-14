@@ -21,6 +21,9 @@ app.use(bodyParser.json({
     limit: '50mb'
 }));
 
+//API_URL = "http://127.0.0.1:5000"
+API_URL = "https://gp-python.herokuapp.com"
+
 // pug stuff
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))
@@ -232,7 +235,7 @@ app.post('/googler_process', urlencodedParser, function (req, res) {
    console.log("googler_process = ",response);
 
    //request('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY', { json: true }, (err, res, body) => {
-   request('http://127.0.0.1:5000/json?q='+response.query, { json: true }, (err, res2, results) => {
+   request(API_URL+'/json?q='+response.query, { json: true }, (err, res2, results) => {
       if (err) {
          var fakeData = {
             //error: "Python API not yet available",
@@ -272,7 +275,7 @@ app.get('/get_pquery/:q', function (req, res) {
    console.log("get_pquery = ",response);
 
    //request('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY', { json: true }, (err, res, body) => {
-   request('http://127.0.0.1:5000/json?q='+response.query, { json: true }, (err, res2, results) => {
+   request(API_URL+'/json?q='+response.query, { json: true }, (err, res2, results) => {
       if (err) {
          var fakeData = {
             //error: "Python API not yet available",
