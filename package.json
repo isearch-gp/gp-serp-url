@@ -1,9 +1,9 @@
 {
   "name": "gp-serp-url",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Interative Search: simple Google Search web proxies",
   "private": true,
-  "license": "Interative Search",
+  "license": "MIT",
   "main": "index.js",
   "engines": {
     "node": "8.11.3"
@@ -22,7 +22,6 @@
     "serp"
   ],
   "author": "mkobar",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mkobar/gp-serp-url/issues"
   },
