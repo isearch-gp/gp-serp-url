@@ -10,3 +10,4 @@ node_modules/
 *.json~
 *.json~
 package.json~
+*.md~

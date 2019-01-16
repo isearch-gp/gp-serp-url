@@ -1,5 +1,8 @@
 # gp-serp-url
-Google search proxy using the SERP URL and others
+
+## Google search proxy using the SERP URL and others
+
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 Currently supported:
 

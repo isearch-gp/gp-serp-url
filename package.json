@@ -11,7 +11,10 @@
   "scripts": {
     "start": "NODE_ENV=production node ./index.js --api https://gp-python.herokuapp.com",
     "localstart": "node ./index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "heroku-prebuild": "echo This runs before Heroku installs your dependencies.",
+    "heroku-postbuild": "echo This runs after the Heroku build.",
+    "test": "standard",
+    "test1": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -40,5 +43,15 @@
     "pug": "^2.0.3",
     "querystring": "^0.2.0",
     "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "standard": "^12.0.1"
+  },
+  "standard": {
+    "ignore": [
+    "**/views/",
+    "GoogleSearchResults.js",
+    "GoogleIt.js"
+    ]
   }
 }
