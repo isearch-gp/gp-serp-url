@@ -288,15 +288,22 @@ app.post('/googler_process', urlencodedParser, function (req, res) {
    request(args.api+'/json?q='+response.query, 
 		   { json: true }, (err, res2, results) => {
       if (err) {
+         console.log(err); 
          var fakeData = {
             //error: "Python API not yet available",
             error: err,
             query: response.query,
          };
          res.render('search-googler', {data:fakeData})
-         return console.log(err); 
+         //return console.log(err); 
       } else if (res2.statusCode !== 200) {
          console.log('Status:', res2.statusCode);
+         var fakeData = {
+            //error: "Python API not yet available",
+            error: 'Status = '+res2.statusCode,
+            query: response.query,
+         };
+         res.render('search-googler', {data:fakeData})
       } else {
          //console.log(body.url);
          //console.log(body.explanation);
