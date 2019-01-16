@@ -1,3 +1,4 @@
+'use strict';
 // index.js
 // from https://www.tutorialspoint.com/nodejs/nodejs_express_framework.htm
 var express = require('express');
@@ -5,14 +6,50 @@ var app = express();
 var bodyParser = require('body-parser');
 var path = require('path');
 const request = require('request');
-
-//var serverPort = 8081;
-// use port 8081 unless there exists a preconfigured port
-var serverPort = process.env.PORT || 8081; // Heroku uses PORT
-//var serverPort = app.get('PORT') || 8081;
+const minimist = require('minimist');
 
 var gsr = require('./GoogleSearchResults');
 var googleIt = require('./GoogleIt');
+
+const process_name = process.argv[0]
+let args = minimist(process.argv.slice(2), {  
+    alias: {
+	a: 'api',
+        h: 'help',
+        p: 'port',
+        v: 'verbose'
+    },
+    default: {
+        api: 'http://127.0.0.1:5000',
+        help: false,
+        port: 8081,
+	verbose: 0
+    },
+    
+});
+if (args.verbose) {
+   console.log('args:', args);
+}
+
+if (args.help){
+    console.log(process_name+": a simple set of Google Search proxies\n"+
+       "\tOptions:\n"+ 
+       "\t-a --api API_URL_with_port\n"+
+       "\t-h --help this message\n"+
+       "\t-p --port local port to listen on (default 8081)\n"+
+       "\t-v --verbose (+3 for lots)\n")
+    process.exit();
+}
+
+console.log('Using port', args.port);
+console.log('Using API URL of: ', args.api);
+
+
+
+//var serverPort = 8081;
+// use port 8081 unless there exists a preconfigured port
+var serverPort = process.env.PORT || args.port; // Heroku uses PORT
+
 
 // Create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
@@ -22,7 +59,7 @@ app.use(bodyParser.json({
 }));
 
 //API_URL = "http://127.0.0.1:5000"
-API_URL = "https://gp-python.herokuapp.com"
+var API_URL = "https://gp-python.herokuapp.com"
 
 // pug stuff
 app.set('view engine', 'pug')
@@ -104,7 +141,7 @@ app.post('/process_query', urlencodedParser, function (req, res) {
       query:req.body.query,
       //last_name:req.body.last_name
    };
-   console.log("proces_query =",response);
+   console.log("process_query =",response);
     //let p = {q: "Coffee", location: "Austin, Texas"}
     //let p = {q: response.query, location: null} // num not allowed
     //let p = {q: response.query, location: null, hl: "en", gl: "us", num: 100} // coffee
@@ -137,7 +174,9 @@ app.post('/process_query', urlencodedParser, function (req, res) {
 	    rel.link = "/get_query/"+new_link;
       })
       let results = data.local_results;
-      //console.log(data)
+      if (args.verbose > 3) {
+         console.log(data)
+      }
       res.render('search', {data:data, json:json_string, related_searches2:related})
       //res.sendFile( __dirname + "/" + "search3.html" ); // search = post
     })
@@ -178,7 +217,9 @@ app.get('/get_query/:q', function (req, res) {
 	    rel.link = "/get_query/"+new_link;
       })
       let results = data.local_results;
-      //console.log(data)
+      if (args.verbose > 3) {
+         console.log(data)
+      }
       res.render('search', {data:data, json:json_string, related_searches2:related})
     }, (err) => {
 	    console.log("ERROR "+err.message);
@@ -209,7 +250,9 @@ app.post('/process_git', urlencodedParser, function (req, res) {
    googleIt(options, {'query': response.query }).then(results => {
    // access to results object here
        let json_string = JSON.stringify(results);
-       console.log(results);
+       if (args.verbose > 3) {
+         console.log(results)
+       }
 
        data = {
          query: response.query,
@@ -228,6 +271,12 @@ app.post('/process_git', urlencodedParser, function (req, res) {
 
 
 // Python Web scraper (googler) Post from (search_googler.pug)
+// https://www.twilio.com/blog/2017/08/http-requests-in-node-js.html
+// https://stackoverflow.com/questions/11826384/calling-a-json-api-with-node-js
+//
+// POST with Require
+// https://www.thepolyglotdeveloper.com/2017/10/consume-remote-api-data-nodejs-application/
+//
 app.post('/googler_process', urlencodedParser, function (req, res) {
    response = {
       query:req.body.query,
@@ -235,7 +284,9 @@ app.post('/googler_process', urlencodedParser, function (req, res) {
    console.log("googler_process = ",response);
 
    //request('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY', { json: true }, (err, res, body) => {
-   request(API_URL+'/json?q='+response.query, { json: true }, (err, res2, results) => {
+   //request(API_URL+'/json?q='+response.query, 
+   request(args.api+'/json?q='+response.query, 
+		   { json: true }, (err, res2, results) => {
       if (err) {
          var fakeData = {
             //error: "Python API not yet available",
@@ -244,30 +295,35 @@ app.post('/googler_process', urlencodedParser, function (req, res) {
          };
          res.render('search-googler', {data:fakeData})
          return console.log(err); 
-      }
-      //console.log(body.url);
-      //console.log(body.explanation);
-      let json_string = JSON.stringify(results);
-      console.log(results);
+      } else if (res2.statusCode !== 200) {
+         console.log('Status:', res2.statusCode);
+      } else {
+         //console.log(body.url);
+         //console.log(body.explanation);
+         let json_string = JSON.stringify(results);
 
-      let related = results.related_searches;
-      related.forEach((rel, index) => {
-	 //console.log(rel.query)
-	 //console.log(rel.link)
-	 var new_link = rel.query.replace(/\s/g, '+');
-         //console.log(new_link);
-	 rel.link = "/get_pquery/"+new_link;
-      })
+	 if (args.verbose > 3) {
+           console.log(results)
+         }
+         let related = results.related_searches;
+         related.forEach((rel, index) => {
+           //console.log(rel.query)
+	   //console.log(rel.link)
+	   var new_link = rel.query.replace(/\s/g, '+');
+           //console.log(new_link);
+	   rel.link = "/get_pquery/"+new_link;
+        })
 
-      //res.render('search-googler', {data:results, json:json_string})
-      res.render('search', {data:results, json:json_string, related_searches2:related})
+        //res.render('search-googler', {data:results, json:json_string})
+        res.render('search', {data:results, json:json_string, related_searches2:related})
 	       
       //res.render('search-googler', {})
-   });
+      }
+   }); // request.get
 }) // post
 
 
-// Python Web scraper (googler) Post from (search_googler.pug)
+// Python Web scraper (googler) get from (search_googler.pug)
 app.get('/get_pquery/:q', function (req, res) {
    response = {
       query:req.params.q,
@@ -275,7 +331,9 @@ app.get('/get_pquery/:q', function (req, res) {
    console.log("get_pquery = ",response);
 
    //request('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY', { json: true }, (err, res, body) => {
-   request(API_URL+'/json?q='+response.query, { json: true }, (err, res2, results) => {
+   //request(API_URL+'/json?q='+response.query, { json: true }, (err, res2, results) => {
+   request(args.api+'/json?q='+response.query,
+		   { json: true }, (err, res2, results) => {
       if (err) {
          var fakeData = {
             //error: "Python API not yet available",
@@ -288,7 +346,9 @@ app.get('/get_pquery/:q', function (req, res) {
       //console.log(body.url);
       //console.log(body.explanation);
       let json_string = JSON.stringify(results);
-      console.log(results);
+      if (args.verbose > 3) {
+         console.log(results)
+      }
 
       let related = results.related_searches;
       related.forEach((rel, index) => {
@@ -343,8 +403,11 @@ var server = app.listen(serverPort, function () {
    var host = server.address().address
    var port = server.address().port
    
-   console.log("Example app listening at http://%s:%s", host, port)
+   if (host === '::') {
+	   host = 'localhost'
+   }
+   //console.log("Example app listening at http://%s:%s", host, port)
 
-   console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
+   console.log('Your server is listening on port %d (http://%s:%d)', serverPort, host, serverPort);
 })
 

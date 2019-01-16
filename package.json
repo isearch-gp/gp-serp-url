@@ -9,7 +9,7 @@
     "node": "8.11.3"
   },
   "scripts": {
-    "start": "NODE_ENV=production node ./index.js",
+    "start": "NODE_ENV=production node ./index.js -api https://gp-python.herokuapp.com",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -33,6 +33,7 @@
     "command-line-args": "^5.0.2",
     "express": "^4.16.4",
     "https": "^1.0.0",
+    "minimist": "^1.2.0",
     "ora": "^3.0.0",
     "path": "^0.12.7",
     "pug": "^2.0.3",
