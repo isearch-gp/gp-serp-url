@@ -1,2 +1,20 @@
 # gp-serp-url
-Google search proxy using the SERP URL
+Google search proxy using the SERP URL and others
+
+Currently supported:
+
+- Google Custom Search Web/API
+- Serp API
+- NodeJS Google Search Web Scraper
+- Homegrown Python Google Search Web Scraper
+
+This project uses:
+- NodeJS
+- Express
+- Pug
+- request
+- minimist
+- GoogleSearchResults - for Serp API support
+- GoogleIt - for NodeJS Web Scraper
+- Heroku for hosting
+
