@@ -318,7 +318,7 @@ app.post('/googler_process', urlencodedParser, function (req, res) {
         })
 
         // res.render('search-googler', {data:results, json:json_string})
-        res.render('search', { data: results, json: jsonString, related_searches2: related })
+        res.render('search-googler', { data: results, json: jsonString, related_searches2: related })
 
       // res.render('search-googler', {})
       }
@@ -369,7 +369,7 @@ app.get('/get_pquery/:q', function (req, res) {
         })
 
         // res.render('search-googler', {data:results, json:json_string})
-        res.render('search', { data: results, json: jsonString, related_searches2: related })
+        res.render('search-googler', { data: results, json: jsonString, related_searches2: related })
       }
 
       // res.render('search-googler', {})
