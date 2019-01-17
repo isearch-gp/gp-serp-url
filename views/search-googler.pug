@@ -13,8 +13,8 @@ html
       //- how to do forms?
       form(action = "/googler_process" method = "POST")
         if data
-          if data.query
-            input(type = "text" size="60" name = "query" value = data.query )
+          if data.search_parameters
+            input(type = "text" size="60" name = "query" value = data.search_parameters.q )
           else
             input(type = "text" size="60" name = "query" value = "" ) 
 
