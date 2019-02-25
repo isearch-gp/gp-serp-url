@@ -22,3 +22,5 @@ This project uses:
 - GoogleIt - for NodeJS Web Scraper
 - Heroku for hosting
 
+More here: [Iterative Search](http://iterativesearch.com)
+
