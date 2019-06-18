@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "index.js",
   "engines": {
-    "node": "8.11.3"
+    "node": "8.16.0"
   },
   "scripts": {
     "start": "NODE_ENV=production node ./index.js --api https://gp-python.herokuapp.com",
