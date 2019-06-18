@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/mkobar/gp-serp-url#readme",
   "dependencies": {
-    "body-parser": "1.18.3",
+    "body-parser": "1.19.0",
     "cheerio": "1.0.0-rc.2",
     "colors": "1.3.3",
     "command-line-args": "5.0.2",
